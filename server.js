@@ -126,7 +126,7 @@ mongoose.connect(process.env.MONGO_URI, {
     app.listen(availablePort, () => {
       console.log(`🚀 Server running on port ${availablePort}`);
       console.log(`📚 Exam Tester API is ready!`);
-      console.log(`🔗 Health check: http://localhost:${availablePort}/api/health`);
+      console.log(`🔗 Health check: https://exam-tester-backend.onrender.com/api/health`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);
