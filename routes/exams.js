@@ -30,7 +30,7 @@ router.post('/', verifyToken, isTeacher, uploadExamFile.single('examPdf'), [
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: 'PDF file is required'
+        message: 'Exam file is required (PDF, JPG, or PNG)'
       });
     }
 
@@ -130,13 +130,27 @@ router.get('/file/:id', async (req, res) => {
       });
     }
 
+    // Get file metadata from GridFS to determine content type
+    const files = await bucket.find({ _id: new mongoose.Types.ObjectId(fileId) }).toArray();
+    
+    if (files.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'File not found in GridFS'
+      });
+    }
+    
+    const fileMetadata = files[0];
+    const contentType = fileMetadata.contentType || 'application/pdf';
+    const originalFilename = fileMetadata.filename || `${exam.title}.pdf`;
+
     // Create download stream
     const downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(fileId));
-    
+
     // Set response headers
     res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename="${exam.title}.pdf"`,
+      'Content-Type': contentType,
+      'Content-Disposition': `inline; filename="${originalFilename}"`,
       'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
     });
 

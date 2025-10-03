@@ -94,11 +94,18 @@ const createGridFSStorage = () => {
 const uploadExamFile = multer({
   storage: createGridFSStorage(),
   fileFilter: (req, file, cb) => {
-    // Only allow PDF files
-    if (file.mimetype === 'application/pdf') {
+    // Allow PDF and image files
+    const allowedTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/jpg', 
+      'image/png'
+    ];
+    
+    if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only PDF files are allowed for exam uploads'), false);
+      cb(new Error('Only PDF, JPG, and PNG files are allowed for exam uploads'), false);
     }
   },
   limits: {

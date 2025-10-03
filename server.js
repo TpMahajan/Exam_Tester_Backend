@@ -75,10 +75,10 @@ app.use((err, req, res, next) => {
     });
   }
   
-  if (err.message.includes('Only PDF files are allowed')) {
+  if (err.message.includes('Only PDF, JPG, and PNG files are allowed for exam uploads')) {
     return res.status(400).json({
       success: false,
-      message: 'Only PDF files are allowed for exam uploads.'
+      message: 'Only PDF, JPG, and PNG files are allowed for exam uploads.'
     });
   }
   
